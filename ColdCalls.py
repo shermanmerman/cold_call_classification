@@ -10,10 +10,42 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn import linear_model
+
+
 from sklearn.neighbors  import KNeighborsClassifier
 from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
+import itertools
 
+def plot_confusion_matrix(cm, classes,
+                          normalize=False,
+                          title='Confusion matrix',
+                          cmap=plt.cm.Blues):
+    
+   
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(classes))
+    plt.xticks(tick_marks, classes, rotation=45)
+    plt.yticks(tick_marks, classes)
+    
+
+
+    thresh = cm.max() / 2.
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+        plt.text(j, i, cm[i, j],
+                 horizontalalignment="center",
+                 color="white" if cm[i, j] > thresh else "black")
+        
+        
+    plt.tight_layout()
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+    plt.show()
+class_names = ['Success','Failure']
 
 if __name__ == '__main__':
 
@@ -86,6 +118,11 @@ if __name__ == '__main__':
     mTrainY = y_train.as_matrix(columns=None)
     y_train_array = np.reshape(mTrainY, 3184)
 
+    # Create corresponding numpy matrices (NOT NEEDED??)
+    mTestX = X_test.as_matrix(columns=None)
+    mTestY = y_test.as_matrix(columns=None)
+    y_test_array = np.reshape(mTestY, 796)
+
     # Preprocess data to zero-mean & unit-variance
     #from sklearn import preprocessing
     #X_train = preprocessing.scale(mTrainX)
@@ -93,13 +130,33 @@ if __name__ == '__main__':
 
     #Splitting the Training and Testing data having 20% of Test data
 
-    LR_1_CVS = cross_val_score(estimator=linear_model.LogisticRegression(), X=mTrainX, y=y_train_array, cv=5)
-    score_knn = cross_val_score(KNeighborsClassifier(n_neighbors = 6), X=mTrainX, y=y_train_array, cv=5)
-    score_svm = cross_val_score(svm.SVC(), X=mTrainX, y=y_train_array, cv=5)
-    score_rfc = cross_val_score(RandomForestClassifier(n_estimators=1000, max_depth=None, min_samples_split=10,class_weight="balanced"), X=mTrainX, y=y_train_array, cv=5)
+    # LR_1_CVS = cross_val_score(estimator=linear_model.LogisticRegression(), X=mTrainX, y=y_train_array, cv=5)
+    # score_knn = cross_val_score(KNeighborsClassifier(n_neighbors = 6), X=mTrainX, y=y_train_array, cv=5)
+    # score_svm = cross_val_score(svm.SVC(), X=mTrainX, y=y_train_array, cv=5)
+    # score_rfc = cross_val_score(RandomForestClassifier(n_estimators=1000, max_depth=None, min_samples_split=10,class_weight="balanced"), X=mTrainX, y=y_train_array, cv=5)
 
-    print('LR_1_CVS:', LR_1_CVS)
-    print('score_knn:', score_knn)
-    print('score_svm:', score_svm)
-    print('score_rfc:', score_rfc)
+    # print('LR_1_CVS:', LR_1_CVS)
+    # print('score_knn:', score_knn)
+    # print('score_svm:', score_svm)
+    # print('score_rfc:', score_rfc)
 
+
+    # Drawing confusion matrixes
+    # LogRed
+    LR = linear_model.LogisticRegression()
+    LR.fit(mTrainX,y_train_array)
+    y_pred = LR.predict(mTestX)
+    print(classification_report(y_test_array, y_pred))
+
+    cm = confusion_matrix(y_test_array, y_pred)
+    plot_confusion_matrix(cm, classes=class_names, title='LogReg - Confusion matrix')
+
+    ##########
+    # Random Forest Classifier
+    rfc = RandomForestClassifier(n_estimators=1000, max_depth=None, min_samples_split=10,class_weight="balanced")
+    rfc.fit(mTrainX,y_train_array)
+    y_pred = rfc.predict(mTestX)
+    print(classification_report(y_test_array, y_pred))
+
+    cm = confusion_matrix(y_test_array, y_pred)
+    plot_confusion_matrix(cm, classes=class_names, title='Random Forest Classifier - Confusion matrix')
