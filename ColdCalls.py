@@ -10,6 +10,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn import linear_model
+from sklearn.neighbors  import KNeighborsClassifier
+from sklearn import svm
+from sklearn.ensemble import RandomForestClassifier
 
 
 if __name__ == '__main__':
@@ -76,10 +79,12 @@ if __name__ == '__main__':
     ID = TrainX['Id'].values
     TrainX = TrainX.drop(['Id'],axis=1)
 
+    X_train, X_test, y_train, y_test = train_test_split(TrainX, TrainY, test_size=0.20,random_state=42)
+
     # Create corresponding numpy matrices (NOT NEEDED??)
-    #mTrainX = TrainX.as_matrix(columns=None)
-    #mTrainY = TrainY.as_matrix(columns=None)
-    #Y_train = np.reshape(mTrainY[:,1], 3980)
+    mTrainX = X_train.as_matrix(columns=None)
+    mTrainY = y_train.as_matrix(columns=None)
+    y_train_array = np.reshape(mTrainY, 3184)
 
     # Preprocess data to zero-mean & unit-variance
     #from sklearn import preprocessing
@@ -87,10 +92,14 @@ if __name__ == '__main__':
     #X_test = preprocessing.scale(mTestX)
 
     #Splitting the Training and Testing data having 20% of Test data
-    
-    X_train, X_test, y_train, y_test = train_test_split(TrainX, TrainY, 
-                                                        test_size=0.20,random_state=42)
 
+    LR_1_CVS = cross_val_score(estimator=linear_model.LogisticRegression(), X=mTrainX, y=y_train_array, cv=5)
+    score_knn = cross_val_score(KNeighborsClassifier(n_neighbors = 6), X=mTrainX, y=y_train_array, cv=5)
+    score_svm = cross_val_score(svm.SVC(), X=mTrainX, y=y_train_array, cv=5)
+    score_rfc = cross_val_score(RandomForestClassifier(n_estimators=1000, max_depth=None, min_samples_split=10,class_weight="balanced"), X=mTrainX, y=y_train_array, cv=5)
 
-    #LR_1_CVS = cross_val_score(estimator=linear_model.LogisticRegression(), X=X_train, y=y_train, cv=5)
+    print('LR_1_CVS:', LR_1_CVS)
+    print('score_knn:', score_knn)
+    print('score_svm:', score_svm)
+    print('score_rfc:', score_rfc)
 
