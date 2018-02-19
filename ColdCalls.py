@@ -1,7 +1,6 @@
 
 # coding: utf-8
 
-# In[74]:
 
 # Call needed libraries 
 from sklearn.model_selection import train_test_split, cross_val_score, KFold, cross_val_predict
