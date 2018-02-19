@@ -4,8 +4,6 @@ import itertools
 import seaborn as sns
 import pandas as pd
 
-# Lasso:
-from sklearn import linear_model
 # draw_feature_importance:
 from sklearn.ensemble import ExtraTreesClassifier
 # plot_roc_values:
@@ -39,27 +37,6 @@ def draw_confusion_matrix(cm,
     plt.savefig('figures/{}.pdf'.format(title), bbox_inches='tight')
     #plt.show()
     plt.clf()
-
-def lasso(X, y):
-    df_columns = list(range(52))
-
-    # Instantiate a lasso regressor: lasso
-    lasso = linear_model.Lasso(alpha=0.4, normalize = True)
-
-    # Fit the regressor to the data
-    lasso.fit(X, y)
-
-    # Compute and print the coefficients
-    lasso_coef = lasso.coef_
-
-    print(lasso_coef)
-
-    # Plot the coefficients
-    plt.plot(range(len(df_columns)), lasso_coef)
-    plt.xticks(range(len(df_columns)), X, rotation=60)
-    plt.margins(0.02)
-    #plt.show()
-
 
 
 def draw_correlation_heatmap(X, data_name):
