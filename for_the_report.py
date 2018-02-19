@@ -135,7 +135,6 @@ def grid_search_classifiers(X_train, X_test, y_train, y_test, data_name):
     optimal_parameters =[]
     cross_validation = 10
     scores = [
-        #'recall',
         'precision'
         ]
     for clf_orig, name, tuned_parameter in zip(classifiers_default, names, tuned_parameters):
@@ -160,18 +159,22 @@ def grid_search_classifiers(X_train, X_test, y_train, y_test, data_name):
 
 def print_voting(X, y, X_test, y_test, data_name, parameters=None):
     print('###### Voting - {} ######'.format(data_name))
+    
     # Voting Ensemble for Classification
     from sklearn.ensemble import VotingClassifier
     kfold = KFold(n_splits=10, random_state=42)
-    # create the sub models
+    
+    # Create the sub models
     estimators = []
     for name, clf in zip(names, classifiers_default):
         estimators.append((name, clf))    
-    # create the ensemble model
+    
+    # Create the ensemble model
     ensemble = VotingClassifier(estimators, voting='soft')
     results = cross_val_score(ensemble, X, y, cv=kfold)
     ensemble.fit(X, y)
 
+    # Plot Voting data for ROC curve
     if parameters == 1:
         plt.figure(2)
         plot_roc_values(ensemble, X_test, y_test, 'Voting')
@@ -210,24 +213,23 @@ if __name__ == '__main__':
     data_names = ['First Data', 'Second Data', 'Third Data']
     #####
 
-    for data, data_name in zip(datas, data_names):
-        
+    for data, data_name in zip(datas, data_names):        
         print('\n\n>>>>>>>>>>>>>>>> {} <<<<<<<<<<<<<<<<<\n'.format(data_name))
         data = pd.get_dummies(data, drop_first=True)
         X = data.drop(['CarInsurance'], axis=1)
         y = data.CarInsurance
 
         # Data preprocessing:
-        #voting(X, y)
-        #feature_reduction(X, 0.8)
-        #draw_correlation_heatmap(X, data_name)
+        voting(X, y)
+        feature_reduction(X, 0.8)
+        draw_correlation_heatmap(X, data_name)
         data = StandardScaler().fit_transform(data)
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, random_state=None)
 
         print_voting(X, y, X_test, y_test, data_name)
-        #draw_feature_importance(X_train, y_train, data_name)
+        draw_feature_importance(X_train, y_train, data_name)
         # Drawing confusion matrixes
-        #optimal_parameters = grid_search_classifiers(X_train, X_test, y_train, y_test, data_name)
-        #print('optimal_parameters:', optimal_parameters)
-        #default_classifiers(X_train, X_test, y_train, y_test, data_name)
+        optimal_parameters = grid_search_classifiers(X_train, X_test, y_train, y_test, data_name)
+        print('optimal_parameters:', optimal_parameters)
+        default_classifiers(X_train, X_test, y_train, y_test, data_name)
