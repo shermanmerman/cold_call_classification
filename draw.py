@@ -41,7 +41,7 @@ def draw_confusion_matrix(cm,
 
 def draw_correlation_heatmap(X, data_name):
     corrMatrix = X.corr()
-    b = sns.heatmap(corrMatrix, mask=np.zeros_like(corrMatrix, dtype=np.bool), cmap=sns.diverging_palette(220, 10, as_cmap=True),
+    sns.heatmap(corrMatrix, mask=np.zeros_like(corrMatrix, dtype=np.bool), cmap=sns.diverging_palette(220, 10, as_cmap=True),
                 square=True, xticklabels=False, yticklabels=False)
     plt.title("Correlation_Heatmap-{}".format(data_name))
     plt.savefig('figures/Correlation_Heatmap_{}.pdf'.format(data_name), bbox_inches='tight')
