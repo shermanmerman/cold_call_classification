@@ -1,4 +1,4 @@
-"","Id","Age","Job","Marital","Education","Default","Balance","HHInsurance","CarLoan","Communication","LastContactDay","LastContactMonth","NoOfContacts","DaysPassed","PrevAttempts","Outcome","CarInsurance","CallDuration","CallHour","AgeBinEW","BalanceBin","WithinMonth","PrevAttempsToDaysPassed"
+"Id_duplicate","Id","Age","Job","Marital","Education","Default","Balance","HHInsurance","CarLoan","Communication","LastContactDay","LastContactMonth","NoOfContacts","DaysPassed","PrevAttempts","Outcome","CarInsurance","CallDuration","CallHour","AgeBinEW","BalanceBin","WithinMonth","PrevAttempsToDaysPassed"
 "2886",2886,77,"retired","married","unknown","0",1807,"0","0","telephone",20,"oct",1,-1,0,"unknown","1",373,"11","(71.9,79.6]","AboveAverage","MidMonth",0
 "3503",3503,43,"management","married","tertiary","0",2383,"0","0","cellular",13,"aug",6,-1,0,"unknown","1",379,"10","(41.1,48.8]","AboveAverage","MidMonth",0
 "3045",3045,25,"services","single","secondary","0",2311,"0","1","cellular",21,"jul",2,-1,0,"unknown","1",1105,"11","(17.9,25.7]","AboveAverage","LateMonth",0
